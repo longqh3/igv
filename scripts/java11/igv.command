@@ -8,9 +8,10 @@
 #-Xmx4g indicates 4 gb of memory, adjust number up or down as needed
 #Add the flag -Ddevelopment = true to use features still in development
 prefix=`dirname $(readlink $0 || echo $0)`
-exec java --module-path="$prefix"/lib -Xmx4g \
-    @"$prefix"/igv.args \
+exec java --module-path="${prefix}/lib" -Xmx4g \
+    @"$prefix/igv.args" \
+    --class-path="${prefix}/lib_classpath/*" \
     -Xdock:name="IGV" \
 	-Dapple.laf.useScreenMenuBar=true \
 	-Djava.net.preferIPv4Stack=true \
-	--module org.igv/org.broad.igv.ui.Main "$@"
+	--module=org.igv/org.broad.igv.ui.Main "$@"

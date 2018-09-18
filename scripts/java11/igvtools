@@ -1,0 +1,6 @@
+#!/bin/sh
+prefix=`dirname $(readlink $0 || echo $0)`
+java -Djava.awt.headless=true --module-path="${prefix}/lib" -Xmx1500m \
+    @igv.args \
+    --class-path="${prefix}/lib_classpath/*" \
+    --module=org.igv/org.broad.igv.tools.IgvTools  "$@"

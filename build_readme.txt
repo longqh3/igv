@@ -37,13 +37,13 @@ There are other options but these cover the most common uses:
 
 Note that Gradle creates a number of other subdirectories in 'build'.  These can be safely ignored.
 
-The instructions for Java 9 are nearly identical other than the need to specify the Java 9 build file
-and that the results will be found in 'build_java9' rather than 'build'.  More specifically:
-- Use './gradlew -b build_java9.gradle createDist' to build a distribution directory with helper scripts
+The instructions for Java 11 are nearly identical other than the need to specify the Java 11 build file
+and that the results will be found in 'build_java11' rather than 'build'.  More specifically:
+- Use './gradlew -b build_java11.gradle createDist' to build a distribution directory with helper scripts
   for launching.  The structure is slightly different but the concept is the same.
-- Use './gradlew -b build_java9.gradle createToolsDist' for the igvtools distribution.
-- Use './gradlew -b build_java9.gradle test' to run the test suite.
+- Use './gradlew -b build_java11.gradle createToolsDist' for the igvtools distribution.
+- Use './gradlew -b build_java11.gradle test' to run the test suite.
 
-The full JAR build option is *NOT* available for Java 9+ because of modularity requirements.
+The full JAR build option is *NOT* available for Java 11 because of modularity requirements.
 
 NOTE: In the above, use './gradlew.bat' on the Windows platform.

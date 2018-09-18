@@ -7,8 +7,9 @@
 #Add the flag -Dsun.java2d.uiScale=2 for HiDPI displays
 prefix=`dirname $(readlink $0 || echo $0)`
 exec java --module-path="$prefix"/lib -Xmx4g \
+    --class-path="${prefix}/lib_classpath/*" \
     @igv.args \
     -Dsun.java2d.uiScale=2 \
-	-Dapple.laf.useScreenMenuBar=true \
-	-Djava.net.preferIPv4Stack=true \
-	--module org.igv/org.broad.igv.ui.Main "$@"
+    -Dapple.laf.useScreenMenuBar=true \
+    -Djava.net.preferIPv4Stack=true \
+    --module=org.igv/org.broad.igv.ui.Main "$@"
