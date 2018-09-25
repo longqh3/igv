@@ -7,6 +7,16 @@
 #Add the flag -Ddevelopment = true to use features still in development
 #Add the flag -Dsun.java2d.uiScale=2 for HiDPI displays
 prefix=`dirname $(readlink $0 || echo $0)`
+
+# Check whether or not to use the bundled JDK
+if [ -d "${prefix}/jdk-11" ]; then
+    echo echo "Using bundled JDK."
+    JAVA_HOME="${prefix}/jdk-11"
+    PATH=$JAVA_HOME:$PATH
+else
+    echo "Bundled JDK not found.  Using system JDK."
+fi
+
 exec java --module-path="${prefix}/lib" -Xmx4g \
     --class-path="${prefix}/lib_classpath/*" \
     @igv.args \

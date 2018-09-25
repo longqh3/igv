@@ -1,10 +1,12 @@
 #!/bin/sh
 
-#This script is intended for launch on *nix machines
+#This script is intended for launching on Macs
+#It may or may not work on *nix, definitely not on windows
 
+#apple.laf.useScreenMenuBar for Macs, to put menu bar at top of screen
+#-Xdock:name again for Macs, sets the name in menu bar
 #-Xmx4g indicates 4 gb of memory, adjust number up or down as needed
 #Add the flag -Ddevelopment = true to use features still in development
-#Add the flag -Dsun.java2d.uiScale=2 for HiDPI displays
 prefix=`dirname $(readlink $0 || echo $0)`
 
 # Check whether or not to use the bundled JDK
@@ -16,10 +18,11 @@ else
     echo "Bundled JDK not found.  Using system JDK."
 fi
 
-exec java --module-path="$prefix"/lib -Xmx4g \
+exec java --module-path="${prefix}/lib" -Xmx4g \
+    @"${prefix}/igv.args" \
     --class-path="${prefix}/lib_classpath/*" \
-    @igv.args \
-    -Dsun.java2d.uiScale=2 \
+    -Xdock:name="IGV" \
+    -Xdock:icon="${prefix}/../Resources/IGV_64.png" \
     -Dapple.laf.useScreenMenuBar=true \
     -Djava.net.preferIPv4Stack=true \
     --module=org.igv/org.broad.igv.ui.Main "$@"

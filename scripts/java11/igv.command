@@ -8,10 +8,21 @@
 #-Xmx4g indicates 4 gb of memory, adjust number up or down as needed
 #Add the flag -Ddevelopment = true to use features still in development
 prefix=`dirname $(readlink $0 || echo $0)`
+
+# Check whether or not to use the bundled JDK
+if [ -d "${prefix}/jdk-11" ]; then
+    echo echo "Using bundled JDK."
+    JAVA_HOME="${prefix}/jdk-11"
+    PATH=$JAVA_HOME:$PATH
+else
+    echo "Bundled JDK not found.  Using system JDK."
+fi
+
 exec java --module-path="${prefix}/lib" -Xmx4g \
     @"$prefix/igv.args" \
     --class-path="${prefix}/lib_classpath/*" \
     -Xdock:name="IGV" \
-	-Dapple.laf.useScreenMenuBar=true \
-	-Djava.net.preferIPv4Stack=true \
-	--module=org.igv/org.broad.igv.ui.Main "$@"
+    -Xdock:icon="${prefix}/IGV_64.png" \
+    -Dapple.laf.useScreenMenuBar=true \
+    -Djava.net.preferIPv4Stack=true \
+    --module=org.igv/org.broad.igv.ui.Main "$@"

@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleExecutable</key>
-	<string>JavaAppLauncher</string>
+	<string>IGV</string>
 	<key>CFBundleIconFile</key>
 	<string>igv_icon.icns</string>
 	<key>CFBundleIdentifier</key>
@@ -28,28 +28,6 @@
 	<string></string>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.developer-tools</string>
-	<key>JVMOptions</key>
-	<array>
-		<string>--module-path=$APP_ROOT/Contents/Java/lib</string>
-		<string>--class-path="$APP_ROOT/Contents/Java/lib_classpath/*"<string>
-		<string>--add-exports=java.desktop/com.sun.java.swing.plaf.windows=jide.common</string>
-		<string>--add-exports=java.desktop/javax.swing.plaf.synth=jide.common</string>
-		<string>--add-exports=java.desktop/sun.swing=jide.common</string>
-		<string>--add-exports=java.desktop/sun.awt=jide.common</string>
-		<string>--add-exports=java.desktop/sun.awt.image=jide.common</string>
-		<string>--add-exports=java.desktop/sun.awt.shell=jide.common</string>
-		<string>--add-exports=java.desktop/sun.awt.dnd=jide.common</string>
-		<string>--add-exports=java.desktop/sun.awt.windows=jide.common</string>
-		<string>--add-exports=java.base/sun.security.action=jide.common</string>
-		<string>-Dapple.laf.useScreenMenuBar=true</string>
-		<string>-Dcom.sun.xml.bind.v2.bytecode.ClassTailor.noOptimize</string>
-		<string>-Xmx4g</string>
-		<string>-Xdock:name=IGV</string>
-	</array>
-    <key>JVMMainClassName</key>
-    <string>--module=org.igv/org.broad.igv.ui.Main</string>
-	<key>JVMArguments</key>
-	<array/>
 	<key>NSHighResolutionCapable</key>
     <string>true</string>
 </dict>

@@ -41,7 +41,7 @@ allocated and launched in the location where you have unpacked IGVTools.
 
 To start with a gui the command is
 
-   java -Xmx1500m --module-path=lib  @igv.args --class-path="lib_classpath/*" --module=org.igv/org.broad.igv.tools.IgvTools gui
+   java -Xmx1500m --module-path=lib @igv.args --class-path="lib_classpath/*" --module=org.igv/org.broad.igv.tools.IgvTools gui
 
 Note that the command line has become more complex with Java 11 compared to
 Java 8.  We recommend the shell scripts above for most users.
