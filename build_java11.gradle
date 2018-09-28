@@ -148,7 +148,7 @@ task createDist(type: Copy, dependsOn: jar)  {
     }
     with copySpec {
         from ("${buildDir}/libs")
-        from ("lib")
+        from ("lib") { include '*.jar' }
         from ("lib_java11") {
             exclude 'jaxb-core-2.3.0.1.jar'
             exclude 'jaxb-runtime-2.3.0.1.jar'
@@ -231,6 +231,10 @@ task createMacAppDist(type: Copy, dependsOn: createDist) {
         into "IGV_${version}_java11.app/Contents/Resources"
     }
     with copySpec {
+        from ("${buildDir}/IGV-dist/") include 'igv.args'
+        into "IGV_${version}_java11.app/Contents/Java/"
+    }
+    with copySpec {
         from ("${buildDir}/IGV-dist/lib") include '*.jar'
         into "IGV_${version}_java11.app/Contents/Java/lib"
     }
@@ -238,17 +242,17 @@ task createMacAppDist(type: Copy, dependsOn: createDist) {
         from ("${buildDir}/IGV-dist/lib_classpath") include '*.jar'
         into "IGV_${version}_java11.app/Contents/Java/lib_classpath"
     }
-    into "${buildDir}/IGV-Mac-dist"
+    into "${buildDir}/IGV-MacApp-dist"
 
     doLast {
-        project.exec { commandLine('chmod', '775', "${buildDir}/IGV-Mac-dist/IGV_${version}_java11.app" ) }
+        project.exec { commandLine('chmod', '775', "${buildDir}/IGV-MacApp-dist/IGV_${version}_java11.app" ) }
     }
 }
 
 task createMacAppDistZip(type: Zip, dependsOn: createMacAppDist) {
     archiveName = "IGV_${version}_java11.app.zip"
     destinationDir = file("${buildDir}/distZip")
-    from "${buildDir}/IGV-Mac-dist"
+    from "${buildDir}/IGV-MacApp-dist"
     
     doLast {
         project.exec { commandLine('chmod', '775', createMacDistZip.archivePath ) }

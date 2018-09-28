@@ -15,12 +15,10 @@ Instructions:
 
      java --module-path=lib -Xmx4g @igv.args --class-path="lib_classpath/*" --module=org.igv/org.broad.igv.ui.Main
 
-Note that the command line has become more complex with Java 11 compared to Java 8.  We 
-recommend the scripts below for most users.
-
-Alternatively, you can start IGV with one of the following scripts.  Some of these may not
-be present depending on the distribution you downloaded.  You might have to make the script 
-executable (chmod a+x igv.sh).  
+Note that the command line has become more complex with Java 11 compared to Java 8.  
+Alternatively, you can start IGV with one of the following scripts; this is 
+recommended.  Some of these may not be present depending on the distribution you 
+downloaded.  You might have to make the script executable (chmod a+x igv.sh).  
 
 
 igv.bat       (for Windows)

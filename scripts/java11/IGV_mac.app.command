@@ -18,9 +18,9 @@ else
     echo "Bundled JDK not found.  Using system JDK."
 fi
 
-exec java --module-path="${prefix}/lib" -Xmx4g \
-    @"${prefix}/igv.args" \
-    --class-path="${prefix}/lib_classpath/*" \
+exec java --module-path="${prefix}/../Java/lib" -Xmx4g \
+    @"${prefix}/../Java/igv.args" \
+    --class-path="${prefix}/../Java/lib_classpath/*" \
     -Xdock:name="IGV" \
     -Xdock:icon="${prefix}/../Resources/IGV_64.png" \
     -Dapple.laf.useScreenMenuBar=true \

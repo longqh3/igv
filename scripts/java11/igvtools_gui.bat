@@ -12,4 +12,4 @@ if exist %BatchPath%\jdk-11 (
   set JAVA_COM=java
 )
 
-%JAVA_CMD% java --module-path=%BatchPath%\lib -Xmx1500m @igv.args --class-path=%BatchPath%/lib_classpath/* --module=org.igv/org.broad.igv.tools.IgvTools gui
+start %JAVA_CMD% java --module-path=%BatchPath%\lib -Xmx1500m @igv.args --class-path=%BatchPath%/lib_classpath/* --module=org.igv/org.broad.igv.tools.IgvTools gui
