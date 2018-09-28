@@ -4,7 +4,8 @@ IGV BINARY DISTRIBUTION
 
 Prerequisites:
 
-Java 11 (http://www.java.com).  Not compatible with Java 8, 9, 10.
+Java 11 (http://openjdk.java.net).  This is bundled with our distributions.
+Not compatible with Java 8, 9, 10.
 
 
 Instructions:

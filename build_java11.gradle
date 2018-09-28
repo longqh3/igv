@@ -255,7 +255,7 @@ task createMacAppDistZip(type: Zip, dependsOn: createMacAppDist) {
     from "${buildDir}/IGV-MacApp-dist"
     
     doLast {
-        project.exec { commandLine('chmod', '775', createMacDistZip.archivePath ) }
+        project.exec { commandLine('chmod', '775', createMacAppDistZip.archivePath ) }
     }
 }
 
