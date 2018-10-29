@@ -20,7 +20,6 @@ fi
 
 exec java --module-path="${prefix}/lib" -Xmx4g \
     @"$prefix/igv.args" \
-    --class-path="${prefix}/lib_classpath/*" \
     -Xdock:name="IGV" \
     -Xdock:icon="${prefix}/IGV_64.png" \
     -Dapple.laf.useScreenMenuBar=true \

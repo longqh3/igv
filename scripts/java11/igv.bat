@@ -12,4 +12,4 @@ if exist %BatchPath%\jdk-11 (
   set JAVA_COM=java
 )
 
-start %JAVA_CMD% --module-path=%BatchPath%\lib -Xmx4g -Dproduction=true --class-path="%BatchPath%/lib_classpath/*" @%BatchPath%\igv.args -Djava.net.preferIPv4Stack=true -Dsun.java2d.noddraw=true --module=org.igv/org.broad.igv.ui.Main  %*
+start %JAVA_CMD% --module-path=%BatchPath%\lib -Xmx4g -Dproduction=true @%BatchPath%\igv.args -Djava.net.preferIPv4Stack=true -Dsun.java2d.noddraw=true --module=org.igv/org.broad.igv.ui.Main  %*

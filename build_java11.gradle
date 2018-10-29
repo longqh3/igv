@@ -46,15 +46,12 @@ configurations {
 }
 
 dependencies {
-    // Exclude the JAXB Core & Runtime jars from the module path and instead load them on the classpath in 
-    // order to avoid issues with split-packages.
-    jarsForClasspath fileTree(dir: 'lib_java11', include: ['jaxb-core-2.3.0.1.jar', 'jaxb-runtime-2.3.0.1.jar'])
-    compile fileTree(dir: 'lib', include: '*.jar') + fileTree(dir: 'lib_java11', include: '*.jar') - configurations.jarsForClasspath
+    compile fileTree(dir: 'lib', include: '*.jar')
     testCompile fileTree(dir: 'test/lib', include: '*.jar')
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.10.1'
+    gradleVersion = '4.10.2'
 }
 
 // Gradle bug prevents us from generating Java 11 bytecode: https://github.com/gradle/gradle/issues/5120
@@ -91,7 +88,7 @@ compileJava {
         options.compilerArgs = [
             '--module-path', classpath.asPath,
         ]
-        classpath = configurations.jarsForClasspath
+        classpath = files()
     }
 }
 
@@ -114,7 +111,7 @@ compileTestJava {
             '--add-modules', 'fest.swing',
             '--patch-module', "$moduleName=" + files(sourceSets.test.java.srcDirs).asPath, 
         ]
-        classpath = configurations.jarsForClasspath
+        classpath = files()
     }
 }
 
@@ -132,7 +129,7 @@ test {
             '@scripts/java11/test_suite.args',
             '--patch-module', "$moduleName=" + files(sourceSets.test.java.outputDir, sourceSets.main.output.resourcesDir).asPath, 
         ]
-        classpath = configurations.jarsForClasspath
+        classpath = files()
     }
 }
 
@@ -149,18 +146,7 @@ task createDist(type: Copy, dependsOn: jar)  {
     with copySpec {
         from ("${buildDir}/libs")
         from ("lib") { include '*.jar' }
-        from ("lib_java11") {
-            exclude 'jaxb-core-2.3.0.1.jar'
-            exclude 'jaxb-runtime-2.3.0.1.jar'
-        }
         into "lib"
-    }
-    with copySpec {
-        from ("lib_java11") {
-            include 'jaxb-core-2.3.0.1.jar'
-            include 'jaxb-runtime-2.3.0.1.jar'
-        }
-        into "lib_classpath"
     }
     with copySpec { from ("genomes") { } into "genomes" }
 
@@ -237,10 +223,6 @@ task createMacAppDist(type: Copy, dependsOn: createDist) {
     with copySpec {
         from ("${buildDir}/IGV-dist/lib") include '*.jar'
         into "IGV_${version}_java11.app/Contents/Java/lib"
-    }
-    with copySpec {
-        from ("${buildDir}/IGV-dist/lib_classpath") include '*.jar'
-        into "IGV_${version}_java11.app/Contents/Java/lib_classpath"
     }
     into "${buildDir}/IGV-MacApp-dist"
 
