@@ -137,8 +137,8 @@ task createDist(type: Copy, dependsOn: jar)  {
     from ("web/IGV_64.png")
     from ('scripts/java11') {
         include '*.bat'
-        include '*.command'
         include '*.sh'
+        include 'igv.command'
         include 'igv.args'
         include 'readme.txt'
         include 'igvtools*'
