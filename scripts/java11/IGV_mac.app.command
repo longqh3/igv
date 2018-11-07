@@ -24,4 +24,4 @@ exec java --module-path="${prefix}/../Java/lib" -Xmx4g \
     -Xdock:icon="${prefix}/../Resources/IGV_64.png" \
     -Dapple.laf.useScreenMenuBar=true \
     -Djava.net.preferIPv4Stack=true \
-    --module=org.igv/org.broad.igv.ui.Main "$@"
+    --module=org.igv/org.broad.igv.ui.Main
