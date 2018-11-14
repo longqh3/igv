@@ -240,10 +240,7 @@ task createMacAppDistZip(type: Zip, dependsOn: createMacAppDist) {
     }
 }
 
-task createWinDistZip(type: Zip, dependsOn: createDist) {
-    baseName = "IGV_Win"
-    archiveName = createWinDistZip.baseName + "_${version}_java11.zip"
-    destinationDir = file("${buildDir}/distZip")
+task createWinDist(type: Copy, dependsOn: createDist) {
     if (!jdkBundleWindows.equals("")) {
         with copySpec { from jdkBundleWindows into "jdk-11" }
     }
@@ -254,6 +251,15 @@ task createWinDistZip(type: Zip, dependsOn: createDist) {
         exclude "igvtools_gui"
         exclude "igvtools_gui_hidpi"
     }
+    from ("resources") { include "IGV_64.ico" }
+    into "${buildDir}/IGV-WinExe-dist/IGV_${version}"
+}
+
+task createWinDistZip(type: Zip, dependsOn: createWinDist) {
+    baseName = "IGV_Win"
+    archiveName = createWinDistZip.baseName + "_${version}_java11.zip"
+    destinationDir = file("${buildDir}/distZip")
+    from "${buildDir}/IGV-WinExe-dist/IGV_${version}"
     into createWinDistZip.baseName + "_${version}_java11"
 
     doLast {
@@ -261,4 +267,33 @@ task createWinDistZip(type: Zip, dependsOn: createDist) {
     }
 }
 
-build.dependsOn createLinuxDistZip,createMacDistZip,createMacAppDistZip,createWinDistZip
+task createWinExeDist(type: Copy, dependsOn: createWinDist) {
+    if (!makensisCommand.equals("")) {
+        // Create a build-specific NSIS installer script.
+        with copySpec {
+            from ("scripts/nsis/installer.nsi")
+            filter (ReplaceTokens, tokens: [ VERSION: version ])
+        }
+        from ("scripts/nsis") { include "license_win.txt" }
+        into "${buildDir}/IGV-WinExe-dist"
+    }
+    
+    doLast {
+        if (!makensisCommand.equals("")) {
+            project.exec { commandLine(makensisCommand, "-O${buildDir}/IGV-WinExe-dist/nsis-build.log",
+                                       "${buildDir}/IGV-WinExe-dist/installer.nsi" ) }
+        
+            if (signcodeCommand.equals("")) {
+                project.exec {
+                    standardInput = new ByteArrayInputStream( keyPassword.getBytes() );
+                    commandLine(signcodeCommand, "-spc", spcFile, "-v", pvkFile, "-a", "sha1", 
+                        "-\$", "commercial", "-n", "IGV ${version}", "-i", "http://www.igv.org/",
+                        "-t", tsaurl, "-tr", "10",
+                        "${buildDir}/IGV-WinExe-dist/IGV_${version}-installer.exe")
+                }
+            }
+        }
+    }
+}
+
+build.dependsOn createLinuxDistZip,createMacDistZip,createMacAppDistZip,createWinDistZip,createWinExeDist
