@@ -242,17 +242,26 @@ task createMacAppDistZip(type: Zip, dependsOn: createMacAppDist) {
 
 task createWinDist(type: Copy, dependsOn: createDist) {
     if (!jdkBundleWindows.equals("")) {
-        with copySpec { from jdkBundleWindows into "jdk-11" }
+        with copySpec { from jdkBundleWindows into "IGV_${version}/jdk-11" }
     }
-    from("${buildDir}/IGV-dist") {
-        exclude "*.sh"
-        exclude "*.command"
-        exclude "igvtools"
-        exclude "igvtools_gui"
-        exclude "igvtools_gui_hidpi"
+    with copySpec {
+        from("${buildDir}/IGV-dist") {
+            exclude "*.sh"
+            exclude "*.command"
+            exclude "igvtools"
+            exclude "igvtools_gui"
+            exclude "igvtools_gui_hidpi"
+        }
+        from ("resources") { include "IGV_64.ico" }
+        into "IGV_${version}"
     }
-    from ("resources") { include "IGV_64.ico" }
-    into "${buildDir}/IGV-WinExe-dist/IGV_${version}"
+    with copySpec {
+        // Create a build-specific NSIS installer script.
+        from ("scripts/nsis/installer.nsi")
+        filter (ReplaceTokens, tokens: [ VERSION: version ])
+    }
+    from ("scripts/nsis") { include "license_win.txt" }
+    into "${buildDir}/IGV-WinExe-dist"
 }
 
 task createWinDistZip(type: Zip, dependsOn: createWinDist) {
@@ -267,33 +276,30 @@ task createWinDistZip(type: Zip, dependsOn: createWinDist) {
     }
 }
 
-task createWinExeDist(type: Copy, dependsOn: createWinDist) {
-    if (!makensisCommand.equals("")) {
-        // Create a build-specific NSIS installer script.
-        with copySpec {
-            from ("scripts/nsis/installer.nsi")
-            filter (ReplaceTokens, tokens: [ VERSION: version ])
-        }
-        from ("scripts/nsis") { include "license_win.txt" }
-        into "${buildDir}/IGV-WinExe-dist"
-    }
-    
+task createWinExeDist(type: Exec, dependsOn: createWinDist) {
+    commandLine(makensisCommand, "-O${buildDir}/IGV-WinExe-dist/nsis-build.log",
+                "${buildDir}/IGV-WinExe-dist/installer.nsi")
     doLast {
-        if (!makensisCommand.equals("")) {
-            project.exec { commandLine(makensisCommand, "-O${buildDir}/IGV-WinExe-dist/nsis-build.log",
-                                       "${buildDir}/IGV-WinExe-dist/installer.nsi" ) }
+        if (makensisCommand.equals("")) {
+            throw new GradleException("Required property not set: makensisCommand");
+        }
+    }
+}
         
-            if (signcodeCommand.equals("")) {
-                project.exec {
-                    standardInput = new ByteArrayInputStream( keyPassword.getBytes() );
-                    commandLine(signcodeCommand, "-spc", spcFile, "-v", pvkFile, "-a", "sha1", 
-                        "-\$", "commercial", "-n", "IGV ${version}", "-i", "http://www.igv.org/",
-                        "-t", tsaurl, "-tr", "10",
-                        "${buildDir}/IGV-WinExe-dist/IGV_${version}-installer.exe")
-                }
-            }
+task signWinExeDist(type: Exec, dependsOn: createWinExeDist) {
+    standardInput = new ByteArrayInputStream( keyPassword.getBytes() );
+    commandLine(signcodeCommand, "-spc", spcFile, "-v", pvkFile, "-a", "sha1", 
+                "-\$", "commercial", "-n", "IGV ${version}", "-i", "http://www.igv.org/",
+                "-t", tsaurl, "-tr", "10", "${buildDir}/IGV-WinExe-dist/IGV_${version}-installer.exe")
+    doLast {
+        if (signcodeCommand.equals("")) {
+            throw new GradleException("Required property not set: signcodeCommand");
         }
     }
 }
 
-build.dependsOn createLinuxDistZip,createMacDistZip,createMacAppDistZip,createWinDistZip,createWinExeDist
+build.dependsOn createLinuxDistZip,createMacDistZip,createMacAppDistZip,createWinDistZip
+
+if (!makensisCommand.equals("") && !signcodeCommand.equals("")) {
+    build.dependsOn signWinExeDist
+}
