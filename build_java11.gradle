@@ -277,7 +277,7 @@ task createWinDistZip(type: Zip, dependsOn: createWinDist) {
 }
 
 task createWinExeDist(type: Exec, dependsOn: createWinDist) {
-    commandLine(makensisCommand, "-O${buildDir}/IGV-WinExe-dist/nsis-build.log",
+    commandLine(makensisCommand, "-O${buildDir}/tmp/nsis-build.log",
                 "${buildDir}/IGV-WinExe-dist/installer.nsi")
     doLast {
         if (makensisCommand.equals("")) {
