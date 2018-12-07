@@ -105,6 +105,7 @@ public class AlignmentRenderer {
     private static ColorTable zmwColors;
     private static Map<String, ColorTable> tagValueColors;
     private static ColorTable defaultTagColors;
+    public static HashMap<Character, Color> nucleotideColors;
 
     private static void initializeTagTypes() {
         // pre-seed from orientation colors
@@ -207,8 +208,34 @@ public class AlignmentRenderer {
     }
 
 
+    private static void setNucleotideColors() {
+
+        IGVPreferences prefs = PreferencesManager.getPreferences();
+
+        nucleotideColors = new HashMap();
+
+        Color a = ColorUtilities.stringToColor(prefs.get(SAM_COLOR_A), Color.green);
+        Color c = ColorUtilities.stringToColor(prefs.get(SAM_COLOR_C), Color.blue);
+        Color t = ColorUtilities.stringToColor(prefs.get(SAM_COLOR_T), Color.red);
+        Color g = ColorUtilities.stringToColor(prefs.get(SAM_COLOR_G), new Color(209,113,5));
+        Color n = ColorUtilities.stringToColor(prefs.get(SAM_COLOR_N), new Color(64, 64, 64));
+
+        nucleotideColors.put('A', a);
+        nucleotideColors.put('a', a);
+        nucleotideColors.put('C', c);
+        nucleotideColors.put('c', c);
+        nucleotideColors.put('T', t);
+        nucleotideColors.put('t', t);
+        nucleotideColors.put('G', g);
+        nucleotideColors.put('g', g);
+        nucleotideColors.put('N', n);
+        nucleotideColors.put('n', n);
+        nucleotideColors.put('-', Color.lightGray);
+
+    }
     static {
         initializeTagTypes();
+        setNucleotideColors();
         initializeTagColors();
     }
 
@@ -931,7 +958,7 @@ public class AlignmentRenderer {
                 if (bisulfiteMode) {
                     color = bisinfo.getDisplayColor(idx);
                 } else {
-                    color = SequenceRenderer.nucleotideColors.get(c);
+                    color = nucleotideColors.get(c);
                 }
                 if (color == null) {
                     color = Color.black;
@@ -987,7 +1014,7 @@ public class AlignmentRenderer {
     private void drawBase(Graphics2D g, Color color, char c, int pX, int pY, int dX, int dY, boolean bisulfiteMode,
                           DisplayStatus bisstatus) {
 
-        int fontSize = Math.min(dX, 12);
+        int fontSize = Math.min(Math.min(dX,dY), 12);
         if (fontSize >= 8 && (!bisulfiteMode || (bisulfiteMode && bisstatus.equals(DisplayStatus.CHARACTER)))) {
             Font f = FontManager.getFont(Font.BOLD, fontSize);
             g.setFont(f);
