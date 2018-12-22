@@ -16,8 +16,8 @@ else
     echo "Bundled JDK not found.  Using system JDK."
 fi
 
-exec java --module-path="$prefix"/lib -Xmx4g \
-    @igv.args \
+exec java --module-path="${prefix}"/lib -Xmx4g \
+    @"${prefix}/igv.args" \
     -Dawt.useSystemAAFontSettings=on -Dswing.aatext=true \
     -Dsun.java2d.uiScale=2 \
     -Dapple.laf.useScreenMenuBar=true \

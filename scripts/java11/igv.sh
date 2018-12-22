@@ -18,7 +18,7 @@ else
 fi
 
 exec java --module-path="${prefix}/lib" -Xmx4g \
-    @igv.args \
+    @"${prefix}/igv.args" \
     -Dawt.useSystemAAFontSettings=on -Dswing.aatext=true \
     -Dapple.laf.useScreenMenuBar=true \
     -Djava.net.preferIPv4Stack=true \
