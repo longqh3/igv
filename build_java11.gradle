@@ -265,18 +265,6 @@ task createWinDist(type: Copy, dependsOn: createDist) {
     into "${buildDir}/IGV-WinExe-dist"
 }
 
-task createWinDistZip(type: Zip, dependsOn: createWinDist) {
-    baseName = "IGV_Win"
-    archiveName = createWinDistZip.baseName + "_${version}_java11.zip"
-    destinationDir = file("${buildDir}/distZip")
-    from "${buildDir}/IGV-WinExe-dist/IGV_${version}"
-    into createWinDistZip.baseName + "_${version}_java11"
-
-    doLast {
-        project.exec { commandLine('chmod', '775', createWinDistZip.archivePath ) }
-    }
-}
-
 task createWinExeDist(type: Exec, dependsOn: createWinDist) {
     commandLine(makensisCommand, "-O${buildDir}/tmp/nsis-build.log",
                 "${buildDir}/IGV-WinExe-dist/installer.nsi")
@@ -299,7 +287,7 @@ task signWinExeDist(type: Exec, dependsOn: createWinExeDist) {
     }
 }
 
-build.dependsOn createLinuxDistZip,createMacDistZip,createMacAppDistZip,createWinDistZip
+build.dependsOn createLinuxDistZip,createMacDistZip,createMacAppDistZip
 
 if (!makensisCommand.equals("") && !signcodeCommand.equals("")) {
     build.dependsOn signWinExeDist
